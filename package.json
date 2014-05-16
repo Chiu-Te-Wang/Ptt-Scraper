@@ -1,0 +1,19 @@
+{
+  "name": "pttScraper",
+  "version": "0.0.1",
+  "description": "scrape data from ptt for ccsp final project",
+  "main": "scraper.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Chiu-Te-Wang/Ptt-Scraper"
+  },
+  "author": "Chiu-Te-Wang",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Chiu-Te-Wang/Ptt-Scraper/issues"
+  },
+  "homepage": "https://github.com/Chiu-Te-Wang/Ptt-Scraper"
+}
