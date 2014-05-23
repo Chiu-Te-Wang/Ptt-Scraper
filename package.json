@@ -15,5 +15,10 @@
   "bugs": {
     "url": "https://github.com/Chiu-Te-Wang/Ptt-Scraper/issues"
   },
-  "homepage": "https://github.com/Chiu-Te-Wang/Ptt-Scraper"
+  "homepage": "https://github.com/Chiu-Te-Wang/Ptt-Scraper",
+  "dependencies": {
+    "express": "^3.6.0",
+    "cheerio": "^0.16.0",
+    "request": "^2.34.0"
+  }
 }
