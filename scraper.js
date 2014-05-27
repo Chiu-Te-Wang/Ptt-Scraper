@@ -7,13 +7,14 @@ var parsedResults = [];
 var parseCounter = 0;//for file system ,ensure pages be scrape
 var contentCounter = 0;//for file system ,ensure contents be scrape
 var particleNum = 0;
-var newPage = 'http://www.ptt.cc/bbs/Food/index.html';
+var kinds = "Instant_Food";
+var newPage = 'http://www.ptt.cc/bbs/'+kinds+'/index.html';
 var newestIdex = 0;
-var pages = 38;//496
+var pages = 4;//496
 var scrapLoopNum = 1;
 //need to put in worker dyno and set setTimeout
 
-var pttLimit = 29;
+var pttLimit = 3;
 var divider = parseInt(pages/pttLimit);
 var remain  = pages - divider*pttLimit;
 console.log("divider is " + divider);
@@ -24,8 +25,8 @@ var whileCount = 0;
 async.series([
 	function(callback1){
 		setTimeout(function(){
-			//findNewestPage();
-			newestIdex = 2699;
+			findNewestPage();
+			//newestIdex = 853;
 			callback1();
 		},3000);
 	},
@@ -50,7 +51,12 @@ function findNewestPage(){//get the newest pages number
 	if(!err && res.statusCode === 200){
 		var $ = cheerio.load(html);
 		var a = $('.btn-group.pull-right').children('.btn.wide').eq(1);
-		newestIdex = parseInt(a.attr('href').replace(/(\/|bbs|Food|index|\.html)/gm,""))+1;
+		
+		var reg = new RegExp(kinds,"g");
+		newestIdex = parseInt(a.attr('href')
+					.replace(/(\/|bbs|index|\.html)/gm,"")
+					.replace(reg, ""))+1;
+
 		console.log("newestIdex in findNewestPage : "+newestIdex);
 	}
 });
@@ -138,7 +144,7 @@ function Scraaper4Remain(num){
 }
 
 function scrapeFunc(index,status,who){ //status means newest comming(first page)
-	var web = 'http://www.ptt.cc/bbs/Food/index'+index+'.html';
+	var web = 'http://www.ptt.cc/bbs/'+kinds+'/index'+index+'.html';
 	console.log(web);
 	request(web,function(err,res,html){
 		if(!err && res.statusCode === 200){
@@ -172,6 +178,9 @@ function scrapeContent(URL,content,who){
 								.children('.article-metaline-right')
 								.remove()
 								.end()
+								//.children('.push')
+								//.remove()
+								//.end()
 								.text()
 								;
 						console.log(who + " Scrape : "+ URL);
@@ -204,7 +213,7 @@ function scrapeContent(URL,content,who){
 }
 
 function writeData(){
-		fs.writeFile('ptt_food.json',JSON.stringify(parsedResults),function(err){
+		fs.writeFile('ptt_'+kinds+'.json',JSON.stringify(parsedResults),function(err){
 			     	if(err){
 			   			console.log('Write file failed!');
 			    		throw err;
@@ -256,8 +265,9 @@ function _scrapeFunc(num,html,who){
 								parsedResults.push(metaData);
 								console.log(parseCounter+"  "+date.replace(/(\t|\n| )/gm,"") + " c: "+contentCounter);
 								parseCounter++;
-								if((parseCounter === (particleNum + (pages-1)*20) || parseCounter >= (particleNum + (pages-5)*20)) 
-									&& (parseCounter<(particleNum + (pages-1)*20))){ 
+								if((parseCounter === (particleNum + (pages-1)*20) //|| parseCounter >= (particleNum + (pages-5)*20)) 
+									//&& (parseCounter<(particleNum + (pages-1)*20)
+									)){ 
 							    //ptt has 20 articles per page
 								    if(parseCounter === (particleNum + (pages-1)*20)){
 										writeData();
